@@ -98,11 +98,11 @@ def plot_costs(instances, greedy, two_opt, sa, output_folder="results/figures"):
     print(f"Salvato grafico costi in: {out_path}")
 
 
-def plot_improvements(instances, improv_2opt, improv_sa, greedy, output_folder="results/figures"):
+def plot_improvements(instances, greedy, two_opt, sa, output_folder="results/figures"):
     os.makedirs(output_folder, exist_ok=True)
 
-    perc_2opt = [100 * (imp / g) for imp, g in zip(improv_2opt, greedy)]
-    perc_sa = [100 * (imp / g) for imp, g in zip(improv_sa, greedy)]
+    perc_2opt = [100 * ((g - t) / g) if g else 0 for g, t in zip(greedy, two_opt)]
+    perc_sa = [100 * ((g - s) / g) if g else 0 for g, s in zip(greedy, sa)]
 
     x = range(len(instances))
     width = 0.25
@@ -259,7 +259,7 @@ def main():
 
     # grafici già esistenti
     plot_costs(instances, greedy, two_opt, sa)
-    plot_improvements(instances, gap_2, gap_sa, greedy)
+    plot_improvements(instances, greedy, two_opt, sa)
     plot_gap_mtz(instances, gap_g, gap_2, gap_sa)
 
     # --- NUOVO: grafico dei tempi ---
